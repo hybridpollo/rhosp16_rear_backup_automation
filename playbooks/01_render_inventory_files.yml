@@ -37,7 +37,7 @@
           source {{ stack_rc_file_location }}
           /usr/bin/tripleo-ansible-inventory \
           --stack {{ overcloud_stack_name }} \
-          --static-yaml-inventory {{ tripleo_inventory_file_name }}
+          --static-yaml-inventory {{ tripleo_inventory_file_name | default('stack') }}
         chdir: ../
       delegate_to: localhost
       tags: render_inventory

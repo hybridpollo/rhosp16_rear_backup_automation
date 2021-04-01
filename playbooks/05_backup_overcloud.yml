@@ -5,6 +5,19 @@
 # Example execution command:
 # ansible-playbook -i overcloud_inventory.yml playbooks/05_backup_overcloud.yml --tags bar_create_recover_image
 ---
+- name: 'Back up Ceph authentication files [If director deployed Ceph]'
+  gather_facts: false
+  hosts: ceph_mon
+  become: true
+  tasks:
+    - name: Backup ceph authentication role
+      include_role:
+        name: backup-and-restore
+        tasks_from: ceph_authentication
+      tags:
+      -  bar_create_recover_image
+      when: is_director_deployed_ceph == True
+
 - hosts: Controller
   become: true
   name: Creating the recovery images for the Overcloud Controllers
