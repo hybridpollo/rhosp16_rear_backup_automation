@@ -1,5 +1,9 @@
 ### Red Hat Openstack Platform 16.1 Ansible Driven Backup Automation
 
+### Disclaimer
+The playbooks in this repository are free to use and come without warranty or
+support of Red Hat or the repository owner.
+
 #### About
 This repository contains a set of playbooks used to automate the installation
 and configuration of the Relax and Recover(ReaR) software for a  a Red Hat 
@@ -24,26 +28,22 @@ Plane Backup and Restore documentation.](https://access.redhat.com/documentation
 
 #### Usage
 ##### Configuring the ReaR Backup Server and Clients
-1. Configure passwordless ssh from Undercloud to the backup server: 
+- Configure passwordless ssh from Undercloud to the backup server: 
    - `ssh-copy-id root@backup.server`
-2. Render the ansible inventories:
+- Render the ansible inventories:
    - `ansible-playbook playbooks/01_render_inventory_files.yml`
-3. Configure the ReaR backup server:
+- Configure the ReaR backup server:
    - `ansible-playbook -i rear_backup_server_inventory.yml playbooks/02_rear_backup_server_setup.yml --tags bar_setup_nfs_server`
-4. Configure the ReaR backup client in the Undercloud and Overcloud Controllers:
+- Configure the ReaR backup client in the Undercloud and Overcloud Controllers:
    - `ansible-playbook -i overcloud_inventory.yml playbooks/03_rear_backup_client_setup.yml --tags bar_setup_rear`
 
 ##### Backing up the Undercloud
-1. Execute the playbooks/04_backup_undercloud.yml including the **bar_create_recover_image** ansible tag:
+- Execute the playbooks/04_backup_undercloud.yml including the **bar_create_recover_image** ansible tag:
    - `ansible-playbook -i overcloud_inventory.yml playbooks/04_backup_undercloud.yml --tags bar_create_recover_image`
    - Playbook execution time is dependent on the size of the disk size of the Undercloud
 
 ##### Backing up the Overcloud
-1. Execute the playbooks/05_backup_overcloud.yml including the **bar_create_recover_image** ansible tag:
+- Execute the playbooks/05_backup_overcloud.yml including the **bar_create_recover_image** ansible tag:
    - `ansible-playbook -i overcloud_inventory.yml playbooks/04_backup_undercloud.yml --tags bar_create_recover_image`
    - Playbook execution time is dependent on the size of the disk size of the
-     Overcloud. 
-
-#### Disclaimer
-The playbooks in this repository are free to use and come without warranty or
-support of Red Hat or the repository owner.
+     Overcloud as well as the number of OpenStack controllers. A 1x node Controlle cluster will always be significantly shorter than a 3x node Controller cluster
