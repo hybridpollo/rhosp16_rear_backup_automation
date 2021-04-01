@@ -20,6 +20,6 @@
 
 - hosts: Controller
   become: true
-  name: Creating the recovery images for the Overcloud Controllers
+  name: Creating the backup recovery images for the Overcloud Controllers
   roles:
   - role: backup-and-restore

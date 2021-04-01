@@ -7,6 +7,6 @@
 ---
 - hosts: undercloud
   become: true
-  name: Creating the recovery images for the Undercloud
+  name: Creating the backup recovery images for the Undercloud
   roles:
   - role: backup-and-restore
