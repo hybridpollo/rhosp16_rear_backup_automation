@@ -1,0 +1,520 @@
+Undercloud:
+  hosts:
+    undercloud: {}
+  vars:
+    ansible_connection: local
+    ansible_host: localhost
+    ansible_python_interpreter: /usr/bin/python3
+    ansible_remote_tmp: /tmp/ansible-${USER}
+    auth_url: http://172.16.24.2:5000
+    cacert: null
+    os_auth_token: gAAAAABgZgCrru_R5Gt2k0-RYjJQji9U-f6BXF9u0dTHUiCAvDr9UyqEUghbO6jPO02pe09HVCtDT0kMP6xuxR2tRvswgSyPuydfnwwg1jqz4P3sop42rLxlHmaUyY3qB8To7RYlhFvHD3cjnRBUs1gFALTqjnTRLT-noXq0MhDgT_NgpoRzjGU
+    overcloud_admin_password: Master450!
+    overcloud_horizon_url: https://horizon.holaehlo.net:443/dashboard
+    overcloud_keystone_url: https://horizon.holaehlo.net:13000
+    plan: voltron
+    plans: [voltron]
+    project_name: admin
+    undercloud_service_list: [tripleo_nova_compute, tripleo_heat_engine, tripleo_ironic_conductor,
+      tripleo_swift_container_server, tripleo_swift_object_server, tripleo_mistral_engine]
+    undercloud_swift_url: http://172.16.24.2:8080/v1/AUTH_9938c3660a3f451780efbe58013ba219
+    username: admin
+Controller:
+  children:
+    voltron_Controller: {}
+voltron_Controller:
+  hosts:
+    osp-ctrl01: {ansible_host: 172.16.24.11, canonical_hostname: osp-ctrl01.voltron.xyz,
+      ctlplane_hostname: osp-ctrl01.ctlplane.voltron.xyz, ctlplane_ip: 172.16.24.11,
+      deploy_server_id: 2d9a0b1b-4edf-42ab-91e7-19ab29923a58, external_hostname: osp-ctrl01.external.voltron.xyz,
+      external_ip: 172.25.50.11, internal_api_hostname: osp-ctrl01.internalapi.voltron.xyz,
+      internal_api_ip: 172.25.51.11, storage_hostname: osp-ctrl01.storage.voltron.xyz,
+      storage_ip: 172.25.53.11, storage_mgmt_hostname: osp-ctrl01.storagemgmt.voltron.xyz,
+      storage_mgmt_ip: 172.25.54.11, tenant_hostname: osp-ctrl01.tenant.voltron.xyz,
+      tenant_ip: 172.25.52.11}
+  vars:
+    ansible_ssh_user: heat-admin
+    bootstrap_server_id: 2d9a0b1b-4edf-42ab-91e7-19ab29923a58
+    serial: '1'
+    tripleo_role_name: Controller
+    tripleo_role_networks: [ctlplane, external, internal_api, storage, storage_mgmt,
+      tenant]
+Compute:
+  children:
+    voltron_Compute: {}
+voltron_Compute:
+  hosts:
+    osp-comp01: {ansible_host: 172.16.24.14, canonical_hostname: osp-comp01.voltron.xyz,
+      ctlplane_hostname: osp-comp01.ctlplane.voltron.xyz, ctlplane_ip: 172.16.24.14,
+      deploy_server_id: 2c757f68-9802-4b25-beb2-8afd6af76a1d, external_hostname: osp-comp01.external.voltron.xyz,
+      external_ip: 172.25.50.14, internal_api_hostname: osp-comp01.internalapi.voltron.xyz,
+      internal_api_ip: 172.25.51.14, storage_hostname: osp-comp01.storage.voltron.xyz,
+      storage_ip: 172.25.53.14, storage_mgmt_hostname: osp-comp01.storagemgmt.voltron.xyz,
+      storage_mgmt_ip: 172.25.54.14, tenant_hostname: osp-comp01.tenant.voltron.xyz,
+      tenant_ip: 172.25.52.14}
+    osp-comp02: {ansible_host: 172.16.24.15, canonical_hostname: osp-comp02.voltron.xyz,
+      ctlplane_hostname: osp-comp02.ctlplane.voltron.xyz, ctlplane_ip: 172.16.24.15,
+      deploy_server_id: dbe02cc9-8fe0-4811-8de2-5e182532c140, external_hostname: osp-comp02.external.voltron.xyz,
+      external_ip: 172.25.50.15, internal_api_hostname: osp-comp02.internalapi.voltron.xyz,
+      internal_api_ip: 172.25.51.15, storage_hostname: osp-comp02.storage.voltron.xyz,
+      storage_ip: 172.25.53.15, storage_mgmt_hostname: osp-comp02.storagemgmt.voltron.xyz,
+      storage_mgmt_ip: 172.25.54.15, tenant_hostname: osp-comp02.tenant.voltron.xyz,
+      tenant_ip: 172.25.52.15}
+  vars:
+    ansible_ssh_user: heat-admin
+    bootstrap_server_id: 2d9a0b1b-4edf-42ab-91e7-19ab29923a58
+    serial: '1'
+    tripleo_role_name: Compute
+    tripleo_role_networks: [ctlplane, external, internal_api, storage, storage_mgmt,
+      tenant]
+allovercloud:
+  children:
+    voltron_allovercloud: {}
+voltron_allovercloud:
+  children:
+    voltron_Compute: {}
+    voltron_Controller: {}
+  vars: {container_cli: podman, ctlplane_vip: 172.16.24.20, external_vip: 172.25.50.20,
+    internal_api_vip: 172.25.51.20, redis_vip: 172.25.51.21, storage_mgmt_vip: 172.25.54.20,
+    storage_vip: 172.25.53.20}
+voltron:
+  children:
+    voltron_allovercloud: {}
+voltron_voltron:
+  children:
+    voltron_allovercloud: {}
+voltron_overcloud:
+  children:
+    voltron_allovercloud: {}
+cinder_scheduler:
+  children:
+    voltron_cinder_scheduler: {}
+voltron_cinder_scheduler:
+  children:
+    voltron_Controller: {}
+  vars: {ansible_ssh_user: heat-admin}
+heat_engine:
+  children:
+    voltron_heat_engine: {}
+voltron_heat_engine:
+  children:
+    voltron_Controller: {}
+  vars: {ansible_ssh_user: heat-admin}
+kernel:
+  children:
+    voltron_kernel: {}
+voltron_kernel:
+  children:
+    voltron_Compute: {}
+    voltron_Controller: {}
+  vars: {ansible_ssh_user: heat-admin}
+memcached:
+  children:
+    voltron_memcached: {}
+voltron_memcached:
+  children:
+    voltron_Controller: {}
+  vars: {ansible_ssh_user: heat-admin}
+nova_migration_target:
+  children:
+    voltron_nova_migration_target: {}
+voltron_nova_migration_target:
+  children:
+    voltron_Compute: {}
+  vars: {ansible_ssh_user: heat-admin}
+timezone:
+  children:
+    voltron_timezone: {}
+voltron_timezone:
+  children:
+    voltron_Compute: {}
+    voltron_Controller: {}
+  vars: {ansible_ssh_user: heat-admin}
+octavia_api:
+  children:
+    voltron_octavia_api: {}
+voltron_octavia_api:
+  children:
+    voltron_Controller: {}
+  vars: {ansible_ssh_user: heat-admin}
+iscsid:
+  children:
+    voltron_iscsid: {}
+voltron_iscsid:
+  children:
+    voltron_Compute: {}
+    voltron_Controller: {}
+  vars: {ansible_ssh_user: heat-admin}
+mysql_client:
+  children:
+    voltron_mysql_client: {}
+voltron_mysql_client:
+  children:
+    voltron_Compute: {}
+    voltron_Controller: {}
+  vars: {ansible_ssh_user: heat-admin}
+podman:
+  children:
+    voltron_podman: {}
+voltron_podman:
+  children:
+    voltron_Compute: {}
+    voltron_Controller: {}
+  vars: {ansible_ssh_user: heat-admin}
+ca_certs:
+  children:
+    voltron_ca_certs: {}
+voltron_ca_certs:
+  children:
+    voltron_Compute: {}
+    voltron_Controller: {}
+  vars: {ansible_ssh_user: heat-admin}
+swift_proxy:
+  children:
+    voltron_swift_proxy: {}
+voltron_swift_proxy:
+  children:
+    voltron_Controller: {}
+  vars: {ansible_ssh_user: heat-admin}
+tripleo_packages:
+  children:
+    voltron_tripleo_packages: {}
+voltron_tripleo_packages:
+  children:
+    voltron_Compute: {}
+    voltron_Controller: {}
+  vars: {ansible_ssh_user: heat-admin}
+heat_api_cfn:
+  children:
+    voltron_heat_api_cfn: {}
+voltron_heat_api_cfn:
+  children:
+    voltron_Controller: {}
+  vars: {ansible_ssh_user: heat-admin}
+logrotate_crond:
+  children:
+    voltron_logrotate_crond: {}
+voltron_logrotate_crond:
+  children:
+    voltron_Compute: {}
+    voltron_Controller: {}
+  vars: {ansible_ssh_user: heat-admin}
+swift_ringbuilder:
+  children:
+    voltron_swift_ringbuilder: {}
+voltron_swift_ringbuilder:
+  children:
+    voltron_Controller: {}
+  vars: {ansible_ssh_user: heat-admin}
+cinder_api:
+  children:
+    voltron_cinder_api: {}
+voltron_cinder_api:
+  children:
+    voltron_Controller: {}
+  vars: {ansible_ssh_user: heat-admin}
+glance_api:
+  children:
+    voltron_glance_api: {}
+voltron_glance_api:
+  children:
+    voltron_Controller: {}
+  vars: {ansible_ssh_user: heat-admin}
+keystone_public_api:
+  children:
+    voltron_keystone_public_api: {}
+voltron_keystone_public_api:
+  children:
+    voltron_Controller: {}
+  vars: {ansible_ssh_user: heat-admin}
+nova_vnc_proxy:
+  children:
+    voltron_nova_vnc_proxy: {}
+voltron_nova_vnc_proxy:
+  children:
+    voltron_Controller: {}
+  vars: {ansible_ssh_user: heat-admin}
+neutron_plugin_ml2_ovn:
+  children:
+    voltron_neutron_plugin_ml2_ovn: {}
+voltron_neutron_plugin_ml2_ovn:
+  children:
+    voltron_Controller: {}
+  vars: {ansible_ssh_user: heat-admin}
+nova_libvirt:
+  children:
+    voltron_nova_libvirt: {}
+voltron_nova_libvirt:
+  children:
+    voltron_Compute: {}
+  vars: {ansible_ssh_user: heat-admin}
+nova_api:
+  children:
+    voltron_nova_api: {}
+voltron_nova_api:
+  children:
+    voltron_Controller: {}
+  vars: {ansible_ssh_user: heat-admin}
+nova_compute:
+  children:
+    voltron_nova_compute: {}
+voltron_nova_compute:
+  children:
+    voltron_Compute: {}
+  vars: {ansible_ssh_user: heat-admin}
+chrony:
+  children:
+    voltron_chrony: {}
+voltron_chrony:
+  children:
+    voltron_Compute: {}
+    voltron_Controller: {}
+  vars: {ansible_ssh_user: heat-admin}
+tripleo_firewall:
+  children:
+    voltron_tripleo_firewall: {}
+voltron_tripleo_firewall:
+  children:
+    voltron_Compute: {}
+    voltron_Controller: {}
+  vars: {ansible_ssh_user: heat-admin}
+nova_conductor:
+  children:
+    voltron_nova_conductor: {}
+voltron_nova_conductor:
+  children:
+    voltron_Controller: {}
+  vars: {ansible_ssh_user: heat-admin}
+cinder_volume:
+  children:
+    voltron_cinder_volume: {}
+voltron_cinder_volume:
+  children:
+    voltron_Controller: {}
+  vars: {ansible_ssh_user: heat-admin}
+ovn_dbs:
+  children:
+    voltron_ovn_dbs: {}
+voltron_ovn_dbs:
+  children:
+    voltron_Controller: {}
+  vars: {ansible_ssh_user: heat-admin}
+ovn_metadata:
+  children:
+    voltron_ovn_metadata: {}
+voltron_ovn_metadata:
+  children:
+    voltron_Compute: {}
+  vars: {ansible_ssh_user: heat-admin}
+oslo_messaging_notify:
+  children:
+    voltron_oslo_messaging_notify: {}
+voltron_oslo_messaging_notify:
+  children:
+    voltron_Controller: {}
+  vars: {ansible_ssh_user: heat-admin}
+swift_storage:
+  children:
+    voltron_swift_storage: {}
+voltron_swift_storage:
+  children:
+    voltron_Controller: {}
+  vars: {ansible_ssh_user: heat-admin}
+sshd:
+  children:
+    voltron_sshd: {}
+voltron_sshd:
+  children:
+    voltron_Compute: {}
+    voltron_Controller: {}
+  vars: {ansible_ssh_user: heat-admin}
+octavia_health_manager:
+  children:
+    voltron_octavia_health_manager: {}
+voltron_octavia_health_manager:
+  children:
+    voltron_Controller: {}
+  vars: {ansible_ssh_user: heat-admin}
+oslo_messaging_rpc:
+  children:
+    voltron_oslo_messaging_rpc: {}
+voltron_oslo_messaging_rpc:
+  children:
+    voltron_Controller: {}
+  vars: {ansible_ssh_user: heat-admin}
+octavia_housekeeping:
+  children:
+    voltron_octavia_housekeeping: {}
+voltron_octavia_housekeeping:
+  children:
+    voltron_Controller: {}
+  vars: {ansible_ssh_user: heat-admin}
+placement:
+  children:
+    voltron_placement: {}
+voltron_placement:
+  children:
+    voltron_Controller: {}
+  vars: {ansible_ssh_user: heat-admin}
+haproxy:
+  children:
+    voltron_haproxy: {}
+voltron_haproxy:
+  children:
+    voltron_Controller: {}
+  vars: {ansible_ssh_user: heat-admin}
+octavia_worker:
+  children:
+    voltron_octavia_worker: {}
+voltron_octavia_worker:
+  children:
+    voltron_Controller: {}
+  vars: {ansible_ssh_user: heat-admin}
+clustercheck:
+  children:
+    voltron_clustercheck: {}
+voltron_clustercheck:
+  children:
+    voltron_Controller: {}
+  vars: {ansible_ssh_user: heat-admin}
+neutron_api:
+  children:
+    voltron_neutron_api: {}
+voltron_neutron_api:
+  children:
+    voltron_Controller: {}
+  vars: {ansible_ssh_user: heat-admin}
+snmp:
+  children:
+    voltron_snmp: {}
+voltron_snmp:
+  children:
+    voltron_Compute: {}
+    voltron_Controller: {}
+  vars: {ansible_ssh_user: heat-admin}
+ovn_controller:
+  children:
+    voltron_ovn_controller: {}
+voltron_ovn_controller:
+  children:
+    voltron_Compute: {}
+    voltron_Controller: {}
+  vars: {ansible_ssh_user: heat-admin}
+nova_libvirt_guests:
+  children:
+    voltron_nova_libvirt_guests: {}
+voltron_nova_libvirt_guests:
+  children:
+    voltron_Compute: {}
+  vars: {ansible_ssh_user: heat-admin}
+keystone:
+  children:
+    voltron_keystone: {}
+voltron_keystone:
+  children:
+    voltron_Controller: {}
+  vars: {ansible_ssh_user: heat-admin}
+keystone_admin_api:
+  children:
+    voltron_keystone_admin_api: {}
+voltron_keystone_admin_api:
+  children:
+    voltron_Controller: {}
+  vars: {ansible_ssh_user: heat-admin}
+heat_api:
+  children:
+    voltron_heat_api: {}
+voltron_heat_api:
+  children:
+    voltron_Controller: {}
+  vars: {ansible_ssh_user: heat-admin}
+redis:
+  children:
+    voltron_redis: {}
+voltron_redis:
+  children:
+    voltron_Controller: {}
+  vars: {ansible_ssh_user: heat-admin}
+nova_scheduler:
+  children:
+    voltron_nova_scheduler: {}
+voltron_nova_scheduler:
+  children:
+    voltron_Controller: {}
+  vars: {ansible_ssh_user: heat-admin}
+mysql:
+  children:
+    voltron_mysql: {}
+voltron_mysql:
+  children:
+    voltron_Controller: {}
+  vars: {ansible_ssh_user: heat-admin}
+octavia_deployment_config:
+  children:
+    voltron_octavia_deployment_config: {}
+voltron_octavia_deployment_config:
+  children:
+    voltron_Controller: {}
+  vars: {ansible_ssh_user: heat-admin}
+heat_api_cloudwatch_disabled:
+  children:
+    voltron_heat_api_cloudwatch_disabled: {}
+voltron_heat_api_cloudwatch_disabled:
+  children:
+    voltron_Controller: {}
+  vars: {ansible_ssh_user: heat-admin}
+certmonger_user:
+  children:
+    voltron_certmonger_user: {}
+voltron_certmonger_user:
+  children:
+    voltron_Compute: {}
+    voltron_Controller: {}
+  vars: {ansible_ssh_user: heat-admin}
+horizon:
+  children:
+    voltron_horizon: {}
+voltron_horizon:
+  children:
+    voltron_Controller: {}
+  vars: {ansible_ssh_user: heat-admin}
+tuned:
+  children:
+    voltron_tuned: {}
+voltron_tuned:
+  children:
+    voltron_Compute: {}
+    voltron_Controller: {}
+  vars: {ansible_ssh_user: heat-admin}
+nova_metadata:
+  children:
+    voltron_nova_metadata: {}
+voltron_nova_metadata:
+  children:
+    voltron_Controller: {}
+  vars: {ansible_ssh_user: heat-admin}
+pacemaker:
+  children:
+    voltron_pacemaker: {}
+voltron_pacemaker:
+  children:
+    voltron_Controller: {}
+  vars: {ansible_ssh_user: heat-admin}
+container_image_prepare:
+  children:
+    voltron_container_image_prepare: {}
+voltron_container_image_prepare:
+  children:
+    voltron_Controller: {}
+  vars: {ansible_ssh_user: heat-admin}
+boot_params_service:
+  children:
+    voltron_boot_params_service: {}
+voltron_boot_params_service:
+  children:
+    voltron_Compute: {}
+    voltron_Controller: {}
+  vars: {ansible_ssh_user: heat-admin}
+overcloud:
+  children:
+    voltron: {}

@@ -1,0 +1,43 @@
+---
+- name: Render ansible inventory files to prepare for ReaR
+  hosts: localhost
+  become: true
+  become_user: stack
+  vars_files:
+    - vars/rear_vars.yml
+  tasks:
+    - name: Verify the execution host is the Undercloud
+      stat:
+        path: /usr/share/openstack-tripleo-heat-templates
+      register: is_undercloud
+      delegate_to: localhost
+      tags: render_inventory
+
+    - name:  Stop the play if the host is not the Undercloud
+      fail:
+        msg: This playbook must run from the Undercloud
+      when: is_undercloud.stat.exists == false
+      delegate_to: localhost
+      tags: render_inventory
+
+    - name: Rendering the NFS backup server inventory file
+      shell:
+        cmd: |
+          cat <<EOF > {{ rear_backup_server_inventory_file_name }}
+          [rear_nfs_server]
+          {{ rear_backup_server_fqdn }}  ansible_host={{ tripleo_backup_and_restore_nfs_server }}
+          EOF
+        chdir: ../
+      delegate_to: localhost
+      tags: render_inventory
+
+    - name: Rendering TripleO inventory file
+      shell:
+        cmd: |
+          source {{ stack_rc_file_location }}
+          /usr/bin/tripleo-ansible-inventory \
+          --stack {{ overcloud_stack_name }} \
+          --static-yaml-inventory {{ tripleo_inventory_file_name }}
+        chdir: ../
+      delegate_to: localhost
+      tags: render_inventory

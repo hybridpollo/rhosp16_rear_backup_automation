@@ -1,0 +1,24 @@
+# This playbook configures the ReaR backup NFS server
+# the playbook must be executed with the ansible tag 'bar_setup_nfs_server'
+# to work properly. Example execution command:
+# ansible-playbook -i rear_backup_server_inventory.yml playbooks/02_rear_backup_server_setup.yml --tags bar_setup_nfs_server
+---
+- hosts: rear_nfs_server
+  become: true
+  remote_user: root
+  name: Configure the ReaR backup server
+  vars_files:
+    - vars/rear_vars.yml
+  tasks:
+    - name: Ensure package dependencies not included in the ReaR role are present
+      dnf:
+        name: '{{ rear_required_packages }}'
+        state: installed
+        update_cache: yes
+      tags:
+        - pre_configure
+        - bar_setup_nfs_server
+
+    - name: Configuring the ReaR backup server
+      import_role:
+        name: backup-and-restore

@@ -1,0 +1,15 @@
+# This playbook configures the ReaR backup client
+# on the undercloud and controller nodes
+# Playbook must be executed including the TripleO 
+# generated inventory file and the 'bar_setup_rear' ansible tag. 
+# Example execution command:
+# ansible-playbook -i overcloud_inventory.yml playbooks/03_rear_backup_client_setup.yml --tags bar_setup_rear
+---
+- hosts: undercloud:Controller
+  become: true
+  remote_user: root
+  name: Installing ReaR in the Undercloud and Controller nodes
+  roles:
+  - role: backup-and-restore
+  vars_files:
+    - vars/rear_vars.yml

@@ -1,0 +1,15 @@
+---  
+# Variables used by the playbooks outside the backup-and-restore role
+overcloud_stack_name: voltron
+stack_rc_file_location: /home/stack/stackrc
+tripleo_inventory_file_name: overcloud_inventory.yml
+rear_backup_server_fqdn: backup.voltron.xyz
+rear_backup_server_inventory_file_name: rear_backup_server_inventory.yml
+rear_required_packages:
+  - iptables 
+
+# These are variables associated with the backup-and-restore role 
+# Default variables can be found in  /usr/share/ansible/roles/backup-and-restore/defaults/main.yml
+tripleo_backup_and_restore_nfs_server: 172.25.48.8
+tripleo_backup_and_restore_nfs_storage_folder: /ctl_plane_backups
+tripleo_backup_and_restore_nfs_clients_nets: ['172.25.48.0/23', '172.25.50.0/24']

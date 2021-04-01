@@ -1,0 +1,12 @@
+# This playbook runs the rear backup on the 
+# the undercloud to the ReaR NFS backup server configured
+# in earlier steps. Playbook must be executed includding the TripleO 
+# generated inventory file and the 'bar_create_recover_image_tag' ansible tag. 
+# Example execution command:
+# ansible-playbook -i overcloud_inventory.yml playbooks/04_backup_undercloud.yml --tags bar_create_recover_image
+---
+- hosts: undercloud
+  become: true
+  name: Creating the recovery images for the Undercloud
+  roles:
+  - role: backup-and-restore

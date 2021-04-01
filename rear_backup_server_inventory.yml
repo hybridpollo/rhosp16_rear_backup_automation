@@ -1,0 +1,2 @@
+[rear_nfs_server]
+backup.voltron.xyz  ansible_host=172.25.48.8
