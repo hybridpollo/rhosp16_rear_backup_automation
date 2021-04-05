@@ -56,11 +56,13 @@ deployment.
    - Playbook execution time is dependent on the size of the disk size of the
      Overcloud as well as the number of OpenStack controllers. A 1x node Controlle cluster will always be significantly shorter than a 3x node Controller cluster
 
-The repositorys' base directory also contains a set of bash scripts using Ansible playbook wrappers to facilitate the functionality as described on the previous section:
-`backup_setup.sh`: Configures the rear backup server and clients. 
-`backup_undercloud.sh`: Starts the backup of the Undercloud.
-`backup_overcloud.sh`: Starts the backup of the Overcloud.
-up the Overcloud.
+The repositorys' base directory also contains a set of bash scripts using Ansible playbook wrappers to facilitate the functionality as described on the previous section: 
+
+`backup_setup.sh`: Configures the rear backup server and clients.  
+
+`backup_undercloud.sh`: Starts the backup of the Undercloud. 
+
+`backup_overcloud.sh`: Starts the backup of the Overcloud. 
 
 
 #### Restoring the Undercloud and Overcloud
