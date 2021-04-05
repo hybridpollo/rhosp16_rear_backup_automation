@@ -19,14 +19,13 @@ For additional information and a complete list of features and capabilities of t
 projects page: https://relax-and-recover.org/
 
 ### Requisites
-* Ansible >= 2.9
-* Access to a functioning Undercloud and Overcloud. This is after all our target backup environments.
-* A Red Hat Enterprise Linux 8 server with sufficient storage to accommodate the Undercloud and Overcloud backup images. This server will act as the remote backup host.
-* Network connectivity from the Undercloud and Overcloud hosts to the 
+- Ansible >= 2.9
+- Access to a functioning Undercloud and Overcloud. This is after all our target backup environments.
+- A Red Hat Enterprise Linux 8 server with sufficient storage to accommodate the Undercloud and Overcloud backup images. This server will act as the remote backup host.
+- Network connectivity from the Undercloud and Overcloud hosts to the 
   remote backup host.
-** The ReaR backup process in the Undercloud and Overcloud temporarily mounts an
-NFS filesystem to store the backed up images to the ReaR backup host. 
-* Passwordless ssh authentication from the Undercloud host to the ReaR backup host as the root or a user with elevated privileges for the purposes of automation using Ansible.
+  - The ReaR backup process in the Undercloud and Overcloud temporarily mounts an NFS filesystem to store the backed up images to the ReaR backup host. 
+- Passwordless ssh authentication from the Undercloud host to the ReaR backup host as the root or a user with elevated privileges for the purposes of automation using Ansible.
 
 For additional information refer to the [Introduction to Undercloud and Control
 Plane Backup and Restore](https://access.redhat.com/documentation/en-us/red_hat_openstack_platform/16.1/html/undercloud_and_control_plane_back_up_and_restore/introduction-to-undercloud-and-control-plane-back-up-and-restore_osp-ctlplane-br) documentation.
