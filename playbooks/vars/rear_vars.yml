@@ -24,7 +24,6 @@ rear_backup_server_fqdn: backup.voltron.xyz
 rear_required_packages:
   - iptables 
 
-
 # Variables associated with the backup-and-restore role 
 # Complete list of role variables are in  /usr/share/ansible/roles/backup-and-restore/defaults/main.yml
 tripleo_backup_and_restore_nfs_server: 172.25.48.8
@@ -32,3 +31,14 @@ tripleo_backup_and_restore_nfs_storage_folder: /ctl_plane_backups
 tripleo_backup_and_restore_nfs_clients_nets: 
   - 172.25.48.0/23
   - 172.25.50.0/24
+
+# This var is a dictionary of the configuration of the /etc/rear/local.conf
+# The key:value will be interpreted as key=value on the configuration file.
+tripleo_backup_and_restore_local_config:
+  ISO_DEFAULT: '"automatic"'
+  USING_UEFI_BOOTLOADER: 0
+  OUTPUT: ISO
+  BACKUP: NETFS
+  BACKUP_PROG_COMPRESS_OPTIONS: '( --gzip)'
+  BACKUP_PROG_COMPRESS_SUFFIX: '".gz"'
+

@@ -39,8 +39,8 @@ function inventory_exists(){
 
 function print_help() {
   cat <<EOF 
-The script contains wrapped functions of ansible playbook to facilitate playbook
-execution in automate the install of the of ReaR backup  components for RHOSP 16.1.
+The script contains wrapped functions of ansible playbook commands for 
+automating the install of the of ReaR backup components for RHOSP 16.1.
 This wrapper takes a single argument per invocation: 
 
 Available options:
@@ -54,7 +54,6 @@ EOF
 ###################
 # START SCRIPT ####
 ###################
-
 case "$1" in
   configure-rear-server)
     base_dir_check

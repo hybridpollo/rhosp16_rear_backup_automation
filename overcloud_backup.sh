@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Bash wapper for ansible-playbook commands to perform ReaR backups
+# Bash wapper for ansible-playbook commands to perform ReaR backups 
 #
 # Adjust this to reflect the base directory for this repository in your system
 BASE_DIR=/home/stack/rhosp16_rear_backup_automation
@@ -26,17 +26,38 @@ function base_dir_check(){
 function inventory_exists(){
   ls ${BASE_DIR}/*_inventory.yml > /dev/null 2>&1
   if [[ $? -ne 0 ]]; then
-    echo "ERROR: Inventory files do not exist."
+    echo "Inventory files do not exist."
     return 1
   fi 
+}
+
+function print_help() {
+  cat <<EOF 
+The script contains wrapped functions of ansible playbook commands for
+automating the backup of an RHOSP 16.1 Overcloud control plane with ReaR.
+
+Available options:
+  start => Starts the backup of the Overcloud control plane. This will take a
+           while to complete based on the disk size of the hosts.
+
+Example usage: ${0} start
+EOF
 }
 
 ###################
 # START SCRIPT ####
 ###################
-base_dir_check
-inventory_exists || render_inventory
-overcloud_backup && echo -e "OK: the undercloud has been backed up successfully."
+case "$1" in
+  start)
+    base_dir_check
+    inventory_exists || render_inventory
+    overcloud_backup && echo -e "OK: the Undercloud has been backed up successfully."
+    exit 0
+  ;;
+  *)
+    base_dir_check
+    print_help
+esac
 ###################
 # END SCRIPT ######
 ###################
