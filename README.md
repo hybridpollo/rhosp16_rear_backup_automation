@@ -51,7 +51,7 @@ deployment.
 
 #### Example: Backing up the Overcloud
 - Execute the playbooks/05_backup_overcloud.yml including the **bar_create_recover_image** ansible tag:
-   - `ansible-playbook -i overcloud_inventory.yml playbooks/04_backup_undercloud.yml --tags bar_create_recover_image`
+   - `ansible-playbook -i overcloud_inventory.yml playbooks/05_backup_overcloud.yml --tags bar_create_recover_image`
    - Playbook execution time is dependent on the size of the disk size of the
      Overcloud as well as the number of OpenStack controllers. A 1x node Controlle cluster will always be significantly shorter than a 3x node Controller cluster
 
