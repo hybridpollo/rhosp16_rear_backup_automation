@@ -51,7 +51,7 @@ case "$1" in
   start)
     base_dir_check
     inventory_exists || render_inventory
-    overcloud_backup && echo -e "OK: the Undercloud has been backed up successfully."
+    overcloud_backup && echo -e "OK: the Overcloud controllers has been backed up successfully."
     exit 0
   ;;
   *)
