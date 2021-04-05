@@ -11,7 +11,7 @@ OpenStack Platform 16.1 Undercloud and Overcloud Control Plane backup procedure 
 practices as documented in [Red Hat OpenStack Platform 16.1: Undercloud and Control Plane Backup and Restore](https://access.redhat.com/documentation/en-us/red_hat_openstack_platform/16.1/html/undercloud_and_control_plane_back_up_and_restore/index).
 
 ### About Relax and Recover
-The Relax-and-Recover is a flexable baremetal and virtual machine Linux disaster recovery solution. ReaR is the
+The Relax-and-Recover is a flexible baremetal and virtual machine Linux disaster recovery solution. ReaR is the
 documented solution for backing up and restoring a Red Hat OpenStack Undercloud
 or Overcloud as describe in the [Red Hat OpenStack Platform 16.1: Undercloud and Control Plane Backup and Restore](https://access.redhat.com/documentation/en-us/red_hat_openstack_platform/16.1/html/undercloud_and_control_plane_back_up_and_restore/index) documentation.
 
